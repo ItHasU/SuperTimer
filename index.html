@@ -8,7 +8,7 @@
     />
     <title>SuperTimer</title>
     <meta name="description" content="Minuteur pour entraînements sportifs par intervalles" />
-    <meta name="theme-color" content="#0b1120" />
+    <meta name="theme-color" content="#181b10" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="SuperTimer" />
@@ -20,10 +20,6 @@
     <div id="app">
       <!-- Écran de configuration -->
       <section id="screen-setup" class="screen screen--setup" aria-label="Configuration">
-        <header class="setup-header">
-          <h1>SuperTimer</h1>
-          <p class="tagline">Minuteur pour entraînements par intervalles</p>
-        </header>
         <form id="setup-form" class="setup-form">
           <div class="stepper" data-field="exercises">
             <label>Exercices</label>
@@ -79,15 +75,22 @@
         <div class="running-time" id="running-time">30</div>
         <div class="progress-bar"><div id="progress-bar-fill" class="progress-bar-fill"></div></div>
         <div class="running-controls">
-          <button id="btn-stop" class="btn-round btn-round--stop" aria-label="Arrêter">⏹</button>
-          <button id="btn-pause" class="btn-round" aria-label="Pause">⏸</button>
+          <button id="btn-stop" class="btn-round btn-round--stop" aria-label="Arrêter">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
+          </button>
+          <button id="btn-pause" class="btn-round" aria-label="Pause">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+          </button>
         </div>
       </section>
 
       <!-- Écran de fin -->
       <section id="screen-done" class="screen screen--done" hidden>
         <div class="done-content">
-          <p class="done-emoji">🎉</p>
+          <svg class="done-icon" viewBox="0 0 24 24" width="64" height="64" aria-hidden="true">
+            <circle cx="12" cy="12" r="12" fill="#b4d91f" />
+            <path d="M7 12.5l3 3 7-7" fill="none" stroke="#181b10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
           <h2>Séance terminée !</h2>
           <button id="btn-restart" class="btn-start">Recommencer</button>
         </div>

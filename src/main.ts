@@ -44,6 +44,11 @@ const btnPause = document.getElementById('btn-pause') as HTMLButtonElement;
 const btnStop = document.getElementById('btn-stop') as HTMLButtonElement;
 const btnRestart = document.getElementById('btn-restart') as HTMLButtonElement;
 
+const ICON_PAUSE =
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>';
+const ICON_PLAY =
+  '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>';
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -142,9 +147,17 @@ timer.addEventListener('phase', (event) => {
   screenRunning.classList.add(info.className);
   runningPhaseLabel.textContent = info.label;
   runningProgress.textContent = progressLabelFor(step);
-  btnPause.textContent = '⏸';
+  btnPause.innerHTML = ICON_PAUSE;
   progressBarFill.style.width = '0%';
-  beeper.phaseStart(step.phase);
+  if (step.phase === 'exercise') {
+    if (step.exerciseIndex === 1) {
+      beeper.setStart();
+    } else {
+      beeper.restEnd();
+    }
+  } else {
+    beeper.exerciseEnd();
+  }
   if (navigator.vibrate) navigator.vibrate(step.phase === 'exercise' ? 200 : 80);
 });
 
@@ -154,7 +167,7 @@ timer.addEventListener('tick', (event) => {
   const elapsed = step.duration - remaining;
   progressBarFill.style.width = `${step.duration > 0 ? clamp((elapsed / step.duration) * 100, 0, 100) : 100}%`;
   if (remaining > 0 && remaining <= 3) {
-    beeper.tick();
+    beeper.tick(remaining);
     if (navigator.vibrate) navigator.vibrate(40);
   }
 });
@@ -177,11 +190,11 @@ setupForm.addEventListener('submit', (event) => {
 btnPause.addEventListener('click', () => {
   if (timer.isPaused) {
     timer.resume();
-    btnPause.textContent = '⏸';
+    btnPause.innerHTML = ICON_PAUSE;
     void wakeLock.acquire();
   } else {
     timer.pause();
-    btnPause.textContent = '▶';
+    btnPause.innerHTML = ICON_PLAY;
     void wakeLock.release();
   }
 });
