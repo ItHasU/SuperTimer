@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <title>SuperTimer</title>
+    <meta name="description" content="Minuteur pour entraînements sportifs par intervalles" />
+    <meta name="theme-color" content="#0b1120" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SuperTimer" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Écran de configuration -->
+      <section id="screen-setup" class="screen screen--setup" aria-label="Configuration">
+        <header class="setup-header">
+          <h1>SuperTimer</h1>
+          <p class="tagline">Minuteur pour entraînements par intervalles</p>
+        </header>
+        <form id="setup-form" class="setup-form">
+          <div class="stepper" data-field="exercises">
+            <label>Exercices</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>8</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
+          <div class="stepper" data-field="exerciseTime">
+            <label>Temps d'exercice</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>30 s</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
+          <div class="stepper" data-field="restTime">
+            <label>Pause entre exercices</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>10 s</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
+          <div class="stepper" data-field="sets">
+            <label>Séries</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>3</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
+          <div class="stepper" data-field="setRestTime">
+            <label>Pause entre séries</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>60 s</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
+          <p class="summary" id="setup-summary"></p>
+          <button type="submit" class="btn-start">Démarrer</button>
+        </form>
+      </section>
+
+      <!-- Écran du minuteur -->
+      <section id="screen-running" class="screen screen--running" hidden>
+        <div class="running-top">
+          <span id="running-phase-label" class="phase-label">EXERCICE</span>
+          <span id="running-progress" class="progress-label">Exercice 1/8 · Série 1/3</span>
+        </div>
+        <div class="running-time" id="running-time">30</div>
+        <div class="progress-bar"><div id="progress-bar-fill" class="progress-bar-fill"></div></div>
+        <div class="running-controls">
+          <button id="btn-stop" class="btn-round btn-round--stop" aria-label="Arrêter">⏹</button>
+          <button id="btn-pause" class="btn-round" aria-label="Pause">⏸</button>
+        </div>
+      </section>
+
+      <!-- Écran de fin -->
+      <section id="screen-done" class="screen screen--done" hidden>
+        <div class="done-content">
+          <p class="done-emoji">🎉</p>
+          <h2>Séance terminée !</h2>
+          <button id="btn-restart" class="btn-start">Recommencer</button>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "supertimer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Minuteur PWA mono-fichier pour entraînements sportifs par intervalles",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vite": "^5.4.11",
+    "vite-plugin-singlefile": "^2.0.3"
+  }
+}
