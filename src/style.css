@@ -181,6 +181,11 @@ button {
   color: var(--anise);
 }
 
+.screen--running.phase-prepare {
+  background: var(--setrest);
+  color: var(--anise);
+}
+
 .running-top {
   display: flex;
   flex-direction: column;

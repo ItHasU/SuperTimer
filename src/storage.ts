@@ -1,4 +1,5 @@
 export interface Settings {
+  prepareTime: number;
   exercises: number;
   exerciseTime: number;
   restTime: number;
@@ -7,6 +8,7 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  prepareTime: 10,
   exercises: 8,
   exerciseTime: 30,
   restTime: 10,

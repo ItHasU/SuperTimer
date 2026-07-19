@@ -1,6 +1,6 @@
 import type { Settings } from './storage';
 
-export type Phase = 'exercise' | 'rest' | 'set-rest';
+export type Phase = 'prepare' | 'exercise' | 'rest' | 'set-rest';
 
 export interface Step {
   phase: Phase;
@@ -11,6 +11,9 @@ export interface Step {
 
 export function buildPlan(settings: Settings): Step[] {
   const plan: Step[] = [];
+  if (settings.prepareTime > 0) {
+    plan.push({ phase: 'prepare', duration: settings.prepareTime, exerciseIndex: 1, setIndex: 1 });
+  }
   for (let set = 1; set <= settings.sets; set++) {
     for (let ex = 1; ex <= settings.exercises; ex++) {
       plan.push({ phase: 'exercise', duration: settings.exerciseTime, exerciseIndex: ex, setIndex: set });

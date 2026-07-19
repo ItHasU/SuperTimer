@@ -21,6 +21,14 @@
       <!-- Écran de configuration -->
       <section id="screen-setup" class="screen screen--setup" aria-label="Configuration">
         <form id="setup-form" class="setup-form">
+          <div class="stepper" data-field="prepareTime">
+            <label>Préparation</label>
+            <div class="stepper-controls">
+              <button type="button" class="stepper-btn" data-action="dec" aria-label="Diminuer">−</button>
+              <output class="stepper-value" data-value>10 s</output>
+              <button type="button" class="stepper-btn" data-action="inc" aria-label="Augmenter">+</button>
+            </div>
+          </div>
           <div class="stepper" data-field="exercises">
             <label>Exercices</label>
             <div class="stepper-controls">

@@ -13,6 +13,7 @@ interface FieldDef {
 }
 
 const FIELDS: FieldDef[] = [
+  { key: 'prepareTime', suffix: ' s', min: 0, max: 60, step: 5 },
   { key: 'exercises', suffix: '', min: 1, max: 30, step: 1 },
   { key: 'exerciseTime', suffix: ' s', min: 5, max: 600, step: 5 },
   { key: 'restTime', suffix: ' s', min: 0, max: 300, step: 5 },
@@ -21,6 +22,7 @@ const FIELDS: FieldDef[] = [
 ];
 
 const PHASE_INFO: Record<Phase, { label: string; className: string }> = {
+  prepare: { label: 'PRÉPARATION', className: 'phase-prepare' },
   exercise: { label: 'EXERCICE', className: 'phase-exercise' },
   rest: { label: 'PAUSE', className: 'phase-rest' },
   'set-rest': { label: 'PAUSE SÉRIE', className: 'phase-setrest' },
@@ -70,6 +72,7 @@ function formatSummaryDuration(totalSeconds: number): string {
 
 function totalWorkoutSeconds(s: Settings): number {
   return (
+    s.prepareTime +
     s.sets * (s.exercises * s.exerciseTime + (s.exercises - 1) * s.restTime) +
     (s.sets - 1) * s.setRestTime
   );
@@ -134,6 +137,9 @@ function showScreen(screen: HTMLElement): void {
 }
 
 function progressLabelFor(step: Step): string {
+  if (step.phase === 'prepare') {
+    return `${settings.exercises} exercices · ${settings.sets} séries`;
+  }
   if (step.phase === 'set-rest') {
     return `Série ${step.setIndex}/${settings.sets} terminée`;
   }
@@ -143,13 +149,15 @@ function progressLabelFor(step: Step): string {
 timer.addEventListener('phase', (event) => {
   const { step } = (event as CustomEvent<PhaseDetail>).detail;
   const info = PHASE_INFO[step.phase];
-  screenRunning.classList.remove('phase-exercise', 'phase-rest', 'phase-setrest');
+  screenRunning.classList.remove('phase-prepare', 'phase-exercise', 'phase-rest', 'phase-setrest');
   screenRunning.classList.add(info.className);
   runningPhaseLabel.textContent = info.label;
   runningProgress.textContent = progressLabelFor(step);
   btnPause.innerHTML = ICON_PAUSE;
   progressBarFill.style.width = '0%';
-  if (step.phase === 'exercise') {
+  if (step.phase === 'prepare') {
+    beeper.prepare();
+  } else if (step.phase === 'exercise') {
     if (step.exerciseIndex === 1) {
       beeper.setStart();
     } else {

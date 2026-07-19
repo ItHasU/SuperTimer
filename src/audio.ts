@@ -4,13 +4,32 @@
  */
 export class Beeper {
   private ctx: AudioContext | null = null;
+  private output: AudioNode | null = null;
 
   private context(): AudioContext {
     if (!this.ctx) {
       const Ctor =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      this.ctx = new Ctor();
+      const ctx = new Ctor();
+      this.ctx = ctx;
+
+      // Compresseur/limiteur : écrase la dynamique pour pouvoir pousser un gain de
+      // rattrapage élevé sans écrêtage, ce qui rend les sons plus "forts" à volume
+      // système égal.
+      const compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.value = -28;
+      compressor.knee.value = 6;
+      compressor.ratio.value = 16;
+      compressor.attack.value = 0.002;
+      compressor.release.value = 0.12;
+
+      const makeup = ctx.createGain();
+      makeup.gain.value = 2.4;
+
+      compressor.connect(makeup);
+      makeup.connect(ctx.destination);
+      this.output = compressor;
     }
     return this.ctx;
   }
@@ -28,14 +47,14 @@ export class Beeper {
     }
   }
 
-  private tone(freq: number, duration: number, startOffset = 0, volume = 0.4): void {
+  private tone(freq: number, duration: number, startOffset = 0, volume = 0.5): void {
     const ctx = this.context();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = 'sine';
+    osc.type = 'triangle';
     osc.frequency.value = freq;
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(this.output as AudioNode);
     const t0 = ctx.currentTime + startOffset;
     gain.gain.setValueAtTime(0.0001, t0);
     gain.gain.exponentialRampToValueAtTime(volume, t0 + 0.01);
@@ -47,35 +66,41 @@ export class Beeper {
   /** Note jouée à chacune des 3 dernières secondes, avec une hauteur qui monte à l'approche de zéro. */
   tick(secondsLeft: number): void {
     const freq = { 3: 784, 2: 880, 1: 988 }[secondsLeft] ?? 880;
-    this.tone(freq, 0.12, 0, 0.35);
+    this.tone(freq, 0.12, 0, 0.5);
+  }
+
+  /** Double bip joué au tout début, avec le décompte de préparation. */
+  prepare(): void {
+    this.tone(659, 0.12, 0, 0.5);
+    this.tone(659, 0.12, 0.18, 0.5);
   }
 
   /** Mélodie descendante jouée quand un exercice se termine (repos ou pause de série qui suit). */
   exerciseEnd(): void {
-    this.tone(784, 0.14, 0, 0.35);
-    this.tone(659, 0.14, 0.13, 0.35);
-    this.tone(523, 0.24, 0.26, 0.35);
+    this.tone(784, 0.14, 0, 0.5);
+    this.tone(659, 0.14, 0.13, 0.5);
+    this.tone(523, 0.24, 0.26, 0.5);
   }
 
   /** Mélodie ascendante et rapide jouée quand une pause se termine (reprise d'un exercice). */
   restEnd(): void {
-    this.tone(523, 0.1, 0, 0.35);
-    this.tone(659, 0.1, 0.1, 0.35);
-    this.tone(784, 0.2, 0.2, 0.35);
+    this.tone(523, 0.1, 0, 0.5);
+    this.tone(659, 0.1, 0.1, 0.5);
+    this.tone(784, 0.2, 0.2, 0.5);
   }
 
   /** Petite fanfare jouée au démarrage d'une nouvelle série. */
   setStart(): void {
-    this.tone(523, 0.12, 0, 0.4);
-    this.tone(784, 0.12, 0.12, 0.4);
-    this.tone(1047, 0.3, 0.24, 0.4);
+    this.tone(523, 0.12, 0, 0.55);
+    this.tone(784, 0.12, 0.12, 0.55);
+    this.tone(1047, 0.3, 0.24, 0.55);
   }
 
   /** Alarme de fin de séance : sonnerie insistante pour être audible même en poche. */
   finished(): void {
-    const chime = (start: number) => [0, 0.16, 0.32, 0.52].forEach((t, i) => this.tone(659 + i * 110, 0.24, start + t, 0.45));
+    const chime = (start: number) => [0, 0.16, 0.32, 0.52].forEach((t, i) => this.tone(659 + i * 110, 0.24, start + t, 0.6));
     chime(0);
     chime(0.9);
-    this.tone(1318, 0.6, 1.8, 0.45);
+    this.tone(1318, 0.6, 1.8, 0.6);
   }
 }
