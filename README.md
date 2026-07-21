@@ -26,3 +26,12 @@ pour tester le build de production localement.
 ## Déploiement
 
 Déposer le contenu de `dist/` sur n'importe quel hébergeur statique servant du HTTPS (requis pour le service worker). Ouvrir le site sur mobile puis « Ajouter à l'écran d'accueil » pour l'installer comme une app.
+
+## Publier une release
+
+Un tag `v*.*.*` déclenche `.github/workflows/release.yml`, qui build l'app et publie une release GitHub avec `dist/` en pièce jointe (`supertimer-vX.Y.Z.zip` + `index.html` seul) :
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
