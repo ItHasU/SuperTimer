@@ -33,6 +33,10 @@ const timer = new WorkoutTimer();
 const beeper = new Beeper();
 const wakeLock = new WakeLockManager();
 
+let swRegistration: ServiceWorkerRegistration | null = null;
+let swReloadPending = false;
+let swReloading = false;
+
 const screenSetup = document.getElementById('screen-setup') as HTMLElement;
 const screenRunning = document.getElementById('screen-running') as HTMLElement;
 const screenDone = document.getElementById('screen-done') as HTMLElement;
@@ -136,6 +140,21 @@ function showScreen(screen: HTMLElement): void {
   }
 }
 
+/**
+ * Une nouvelle version a été installée en arrière-plan par le service worker :
+ * on recharge pour l'afficher, sauf en pleine séance (on attend alors la fin
+ * ou l'arrêt pour ne pas couper le minuteur en cours).
+ */
+function reloadForUpdate(): void {
+  if (!screenRunning.hidden) {
+    swReloadPending = true;
+    return;
+  }
+  if (swReloading) return;
+  swReloading = true;
+  window.location.reload();
+}
+
 function progressLabelFor(step: Step): string {
   if (step.phase === 'prepare') {
     return `${settings.exercises} exercices · ${settings.sets} séries`;
@@ -185,6 +204,7 @@ timer.addEventListener('finished', () => {
   beeper.finished();
   if (navigator.vibrate) navigator.vibrate([120, 60, 120, 60, 200]);
   showScreen(screenDone);
+  if (swReloadPending) reloadForUpdate();
 });
 
 setupForm.addEventListener('submit', (event) => {
@@ -213,6 +233,7 @@ btnStop.addEventListener('click', () => {
   void wakeLock.release();
   showScreen(screenSetup);
   renderSetup();
+  if (swReloadPending) reloadForUpdate();
 });
 
 btnRestart.addEventListener('click', () => {
@@ -221,17 +242,34 @@ btnRestart.addEventListener('click', () => {
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && !screenRunning.hidden && !timer.isPaused) {
+  if (document.visibilityState !== 'visible') return;
+  if (!screenRunning.hidden && !timer.isPaused) {
     void wakeLock.acquire();
+  }
+  // Chaque retour au premier plan est l'occasion de vérifier qu'une
+  // nouvelle version n'est pas déjà installée, ou d'aller en chercher une.
+  if (swReloadPending) {
+    reloadForUpdate();
+  } else {
+    void swRegistration?.update();
   }
 });
 
 renderSetup();
 
 if ('serviceWorker' in navigator) {
+  // Dès qu'un nouveau service worker prend le contrôle de la page (après
+  // installation d'une nouvelle version), on recharge pour l'afficher.
+  navigator.serviceWorker.addEventListener('controllerchange', reloadForUpdate);
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {
-      // enregistrement du service worker impossible (hors ligne, non supporté...) : on ignore
-    });
+    navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`)
+      .then((registration) => {
+        swRegistration = registration;
+      })
+      .catch(() => {
+        // enregistrement du service worker impossible (hors ligne, non supporté...) : on ignore
+      });
   });
 }

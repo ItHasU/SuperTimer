@@ -1,11 +1,19 @@
-const CACHE = 'supertimer-v1';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
+// La constante CACHE contient un identifiant généré à chaque build par
+// scripts/stamp-sw.mjs : ça change le contenu de ce fichier à chaque
+// déploiement, ce qui est indispensable pour que le navigateur détecte
+// qu'une nouvelle version du service worker existe.
+const CACHE = 'supertimer-__BUILD_ID__';
+const ASSET_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(ASSETS))
+      .then((cache) =>
+        // cache: 'reload' pour contourner le cache HTTP du navigateur et
+        // garantir qu'on met bien en cache la dernière version déployée.
+        Promise.all(ASSET_URLS.map((url) => fetch(url, { cache: 'reload' }).then((res) => cache.put(url, res))))
+      )
       .then(() => self.skipWaiting())
   );
 });
@@ -30,7 +38,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => cached);
+        .catch(() => (event.request.mode === 'navigate' ? caches.match('./index.html') : undefined));
     })
   );
 });

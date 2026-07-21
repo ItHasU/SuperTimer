@@ -6,7 +6,7 @@
   "description": "Minuteur PWA mono-fichier pour entraînements sportifs par intervalles",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/stamp-sw.mjs",
     "preview": "vite preview"
   },
   "devDependencies": {
