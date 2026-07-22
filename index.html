@@ -8,7 +8,7 @@
     />
     <title>SuperTimer</title>
     <meta name="description" content="Minuteur pour entraînements sportifs par intervalles" />
-    <meta name="theme-color" content="#181b10" />
+    <meta name="theme-color" content="#0d2366" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="SuperTimer" />
@@ -20,6 +20,13 @@
     <div id="app">
       <!-- Écran de configuration -->
       <section id="screen-setup" class="screen screen--setup" aria-label="Configuration">
+        <header class="brand-header">
+          <img class="brand-logo" src="/logo.svg" alt="" width="40" height="40" />
+          <div class="brand-wordmark">
+            <span class="brand-eyebrow">Club d'Athlétisme de Guilers</span>
+            <span class="brand-title">Minuteur</span>
+          </div>
+        </header>
         <form id="setup-form" class="setup-form">
           <div class="stepper" data-field="prepareTime">
             <label>Préparation</label>
@@ -96,8 +103,8 @@
       <section id="screen-done" class="screen screen--done" hidden>
         <div class="done-content">
           <svg class="done-icon" viewBox="0 0 24 24" width="64" height="64" aria-hidden="true">
-            <circle cx="12" cy="12" r="12" fill="#b4d91f" />
-            <path d="M7 12.5l3 3 7-7" fill="none" stroke="#181b10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle class="done-icon-bg" cx="12" cy="12" r="12" />
+            <path class="done-icon-check" d="M7 12.5l3 3 7-7" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <h2>Séance terminée !</h2>
           <button id="btn-restart" class="btn-start">Recommencer</button>

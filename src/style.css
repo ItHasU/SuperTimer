@@ -1,16 +1,61 @@
+/* Charte CA Guilers (Club d'Athlétisme de Guilers) : voir le design system
+   claude.ai/design/p/b156b07f-78da-4e2e-82c6-5c872a57ee29 pour la source des tokens. */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-  color-scheme: dark;
-  --bg: #181b10;
-  --card: #181b10;
-  --card-border: #2a2f1c;
-  --fg: #f5f5f5;
-  --fg-dim: #9a9a9a;
-  --anise: #b4d91f;
-  --anise-dark: #8fae18;
-  --exercise: var(--anise);
-  --rest: var(--bg);
-  --setrest: #262b19;
-  --radius: 20px;
+  color-scheme: light;
+
+  --color-navy-900: #0d2366;
+  --color-navy-950: color-mix(in oklch, var(--color-navy-900), black 22%);
+  --color-navy-300: color-mix(in oklch, var(--color-navy-900), white 66%);
+  --color-navy-100: color-mix(in oklch, var(--color-navy-900), white 88%);
+  --color-pink-600: #df097f;
+  --color-pink-700: color-mix(in oklch, var(--color-pink-600), black 18%);
+  --color-pink-100: color-mix(in oklch, var(--color-pink-600), white 85%);
+  --color-gold-600: oklch(78% 0.15 78);
+  --color-cream-50: #faf7f2;
+  --color-cream-100: #f3ede2;
+  --color-warmgray-900: #241f1a;
+  --color-warmgray-700: #5a5349;
+  --color-warmgray-500: #8a8175;
+  --color-warmgray-300: #c9c1b3;
+  --color-white: #ffffff;
+
+  --surface-page: var(--color-cream-50);
+  --surface-card: var(--color-white);
+  --surface-sunken: var(--color-cream-100);
+  --text-primary: var(--color-navy-950);
+  --text-secondary: var(--color-warmgray-700);
+  --text-muted: var(--color-warmgray-500);
+  --text-inverse: var(--color-white);
+  --brand-primary: var(--color-navy-900);
+  --brand-accent: var(--color-pink-600);
+
+  --font-display: 'Oswald', Impact, 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --fs-display-sm: 1.375rem;
+  --fs-eyebrow: 0.8125rem;
+  --fs-body-sm: 0.875rem;
+  --ls-display: 0.01em;
+  --ls-eyebrow: 0.14em;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(13, 35, 102, 0.08);
+  --shadow-md: 0 4px 16px rgba(13, 35, 102, 0.1);
+  --ease-standard: cubic-bezier(0.3, 0.7, 0.4, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --gradient-hero: linear-gradient(135deg, var(--color-navy-950) 0%, var(--color-navy-900) 55%, var(--color-pink-700) 130%);
 }
 
 * {
@@ -26,9 +71,9 @@ body,
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   overflow-y: auto;
@@ -52,10 +97,51 @@ button {
   display: none;
 }
 
+/* ---------- En-tête de marque ---------- */
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.brand-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.brand-eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--brand-accent);
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
 /* ---------- Écran de configuration ---------- */
 
 .screen--setup {
-  background: var(--anise);
+  background: var(--surface-page);
 }
 
 .setup-form {
@@ -67,19 +153,19 @@ button {
 }
 
 .stepper {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 14px 16px;
 }
 
 .stepper label {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--fg-dim);
+  color: var(--text-secondary);
   margin-bottom: 10px;
 }
 
@@ -92,21 +178,24 @@ button {
 .stepper-btn {
   flex: 0 0 56px;
   height: 56px;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--fg);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
   font-size: 1.8rem;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
+  transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
 }
 
 .stepper-btn:active:not(:disabled) {
-  background: var(--anise);
-  color: var(--bg);
+  background: var(--color-pink-100);
+  color: var(--color-pink-700);
+  transform: scale(0.97);
 }
 
 .stepper-btn:disabled {
@@ -116,16 +205,17 @@ button {
 .stepper-value {
   flex: 1;
   text-align: center;
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
 
 .summary {
   text-align: center;
-  color: var(--bg);
-  opacity: 0.7;
-  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: var(--fs-body-sm);
   margin: 4px 0 0;
 }
 
@@ -133,26 +223,21 @@ button {
   margin-top: 4px;
   height: 60px;
   border: none;
-  border-radius: var(--radius);
-  background: var(--anise);
-  color: var(--bg);
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  border-radius: var(--radius-pill);
+  background: var(--brand-accent);
+  color: var(--text-inverse);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
+  box-shadow: var(--shadow-md);
+  transition: background var(--duration-base) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
 }
 
 .btn-start:active {
-  background: var(--anise-dark);
-}
-
-.screen--setup .btn-start {
-  background: var(--bg);
-  color: var(--anise);
-}
-
-.screen--setup .btn-start:active {
-  background: var(--card-border);
+  background: var(--color-pink-700);
+  transform: scale(0.97);
 }
 
 /* ---------- Écran du minuteur ---------- */
@@ -161,29 +246,29 @@ button {
   align-items: center;
   justify-content: space-between;
   text-align: center;
-  background: var(--exercise);
-  color: var(--bg);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.screen--running.phase-exercise {
-  background: var(--exercise);
-  color: var(--bg);
-}
-
-.screen--running.phase-rest {
-  background: var(--rest);
-  color: var(--anise);
-}
-
-.screen--running.phase-setrest {
-  background: var(--setrest);
-  color: var(--anise);
+  background: var(--color-pink-600);
+  color: var(--text-inverse);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .screen--running.phase-prepare {
-  background: var(--setrest);
-  color: var(--anise);
+  background: var(--gradient-hero);
+  color: var(--text-inverse);
+}
+
+.screen--running.phase-exercise {
+  background: var(--color-pink-600);
+  color: var(--text-inverse);
+}
+
+.screen--running.phase-rest {
+  background: var(--color-navy-900);
+  color: var(--text-inverse);
+}
+
+.screen--running.phase-setrest {
+  background: var(--surface-page);
+  color: var(--text-primary);
 }
 
 .running-top {
@@ -194,9 +279,11 @@ button {
 }
 
 .phase-label {
+  font-family: var(--font-display);
   font-size: clamp(1.4rem, 6vw, 2rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
 }
 
 .progress-label {
@@ -205,8 +292,9 @@ button {
 }
 
 .running-time {
+  font-family: var(--font-display);
   font-size: clamp(6rem, 32vw, 13rem);
-  font-weight: 800;
+  font-weight: var(--fw-bold);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -214,7 +302,7 @@ button {
 .progress-bar {
   width: 100%;
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(128, 128, 128, 0.25);
   overflow: hidden;
 }
@@ -236,25 +324,26 @@ button {
 .btn-round {
   width: 76px;
   height: 76px;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   border: none;
-  background: rgba(128, 128, 128, 0.25);
+  background: color-mix(in oklch, currentColor 18%, transparent);
   color: currentColor;
   font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
 }
 
 .btn-round--stop {
   width: 60px;
   height: 60px;
-  background: rgba(128, 128, 128, 0.18);
   font-size: 1.5rem;
 }
 
 .btn-round:active {
-  background: rgba(128, 128, 128, 0.4);
+  background: color-mix(in oklch, currentColor 32%, transparent);
+  transform: scale(0.97);
 }
 
 /* ---------- Écran de fin ---------- */
@@ -262,7 +351,7 @@ button {
 .screen--done {
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: var(--surface-page);
   text-align: center;
 }
 
@@ -279,7 +368,20 @@ button {
   display: block;
 }
 
+.done-icon-bg {
+  fill: var(--color-gold-600);
+}
+
+.done-icon-check {
+  stroke: var(--color-navy-950);
+}
+
 .done-content h2 {
   margin: 0;
-  font-size: 1.6rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-display-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+  color: var(--text-primary);
 }

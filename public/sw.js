@@ -3,7 +3,7 @@
 // déploiement, ce qui est indispensable pour que le navigateur détecte
 // qu'une nouvelle version du service worker existe.
 const CACHE = 'supertimer-__BUILD_ID__';
-const ASSET_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
+const ASSET_URLS = ['./', './index.html', './manifest.webmanifest', './icon.svg', './logo.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
